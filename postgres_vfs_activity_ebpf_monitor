@@ -1,0 +1,24 @@
+#!/usr/bin/env bpftrace
+
+kprobe:vfs_read
+/comm == "postgres"/
+{
+    $d = ((struct file *)arg0)->f_path.dentry;
+    @rbytes[str($d->d_parent->d_name.name), str($d->d_name.name)] = sum(arg2);
+}
+
+kprobe:vfs_write
+/comm == "postgres"/
+{
+    $d = ((struct file *)arg0)->f_path.dentry;
+    @wbytes[str($d->d_parent->d_name.name), str($d->d_name.name)] = sum(arg2);
+}
+
+interval:s:30
+{
+    time("%Y-%m-%dT%H:%M:%S%z\n");
+    print(@rbytes);
+    print(@wbytes);
+    clear(@rbytes);
+    clear(@wbytes);
+}
