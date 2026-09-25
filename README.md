@@ -3,10 +3,15 @@
 
 # Why
 Let's say you have a PostgreSQL database.
+
 Let's say you monitor this database.
+
 Let's say your monitoring shows a massive burst of reads last night, right before your CPU hit the roof and your connections spiked and your query time exploded.
+
 A reasonable DBA might look at that and say, "it sure looks like something blew out my cache."
+
 Now let's say that DBA goes to the slow query log and tries to identify *which* query was to blame.
+
 But let's say there are hundreds of distinct query patterns at the time of those reads, and they're touching tables all over the place. Nothing was *obviously* terrible but most of those queries were in the hundreds of milliseconds.
 
 How do you know where to focus your investigation?
